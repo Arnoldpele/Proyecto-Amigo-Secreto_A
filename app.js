@@ -1,57 +1,52 @@
-// Array para almacenar los nombres de amigos
-let amigos = [];
+let listaAmigos = [];
+let usuarioIngresado = null;
+let indexListaAmigo = null;
+const regex = /\W|\d/;
 
 function agregarAmigo() {
-    const inputAmigo = document.getElementById("amigo");
-    const nombreAmigo = inputAmigo.value.trim(); // Obtener el valor del input
-
-    // Validar que el campo no esté vacío y que no sea un número
-    if (nombreAmigo === "" || !/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/.test(nombreAmigo)) {
-        alert("Por favor, inserte un nombre válido (solo letras)");
-        return; // Detiene la ejecución de la función 
+    if (document.getElementById("amigo").value == "" || regex.test(document.getElementById("amigo").value)) {
+        alert(`${document.getElementById("amigo").value == "" ? "Por favor, inserte un nombre." : "No ingrese caracteres especiales, números o acentos."}`);
+        limpiarCampo();
+    
     } 
-
-    // Validar que el nombre no esté duplicado
-    if (amigos.includes(nombreAmigo)) {
-        alert(`El nombre ${nombreAmigo} ya está en la lista`);
-        return;
+    else {
+        
+        usuarioIngresado = document.getElementById("amigo").value;
+        listaAmigos.push(usuarioIngresado);
+        //let tamanioActualLista = listaAmigos[listaAmigos.length - 1];
+        //console.log(listaAmigos[listaAmigos.length - 1]);
+        let elementoLista = document.createElement("li");
+        let llamadoALista = document.getElementById("listaAmigos");
+        elementoLista.textContent = usuarioIngresado;
+        llamadoALista.appendChild(elementoLista);
+        //llamadoALista.innerHTML += `<li>${tamanioActualLista}</li>`; //manera incorrecta de modificar el DOM en HTML ya que pueden inyectar código malicioso en tu página
+        limpiarCampo();
+        cambiarContenidoResultado("")
+        
     }
-
-    // Agregar el nombre al array de amigos
-    amigos.push(nombreAmigo);
-
-    // Limpiar el campo de entrada
-    inputAmigo.value = "";
-
-    // Actualizar la lista en el HTML
-    actualizarLista();
+    return;
 }
 
-// Función para actualizar la lista de amigos en la interfaz 
-function actualizarLista() {
-    const listaAmigos = document.getElementById("listaAmigos");
-
-    // Limpiar el contenido actual de la lista 
-    listaAmigos.innerHTML = ""; // Borra cualquier contenido previo dentro del contenedor de la lista 
-
-    // Agregar cada amigo a la lista
-    amigos.forEach(amigo => {
-        const li = document.createElement("li");
-        li.textContent = amigo; // Añadir el nombre a la lista
-        listaAmigos.appendChild(li); // Añadir el nuevo elemento a la lista
-    });
+function limpiarCampo() {
+    document.getElementById("amigo").value = "";
+    return;
 }
 
-// Función para recorrer el array y mostrar los amigos
-function mostrarAmigos() {
-    for (let i = 0; i < amigos.length; i++) {
-        console.log(amigos[i]); // Imprimir en la consola
-    }
-}
-
-// Función para seleccionar un amigo aleatorio
 function sortearAmigo() {
-     if (listaAmigos.length == 0){
+    let amigoSorteado = parseInt(Math.random()*listaAmigos.length);
+    indexListaAmigo = listaAmigos[amigoSorteado];
+    MostrarAmigoSorteado();
+    return;
+}
+
+function cambiarContenidoResultado(valor) {
+    let contenidoResultado = document.getElementById("resultado");
+    contenidoResultado.textContent = valor;
+    return;
+}
+
+function MostrarAmigoSorteado() {
+    if (listaAmigos.length == 0){
         cambiarContenidoResultado("Ingrese un amigo primero")
         } else {
             while (document.querySelector("#listaAmigos").childElementCount > 0 ){
@@ -63,4 +58,4 @@ function sortearAmigo() {
             cambiarContenidoResultado(`Su amigo secreto es ${indexListaAmigo}`)
         }
     return;
-    }
+}
